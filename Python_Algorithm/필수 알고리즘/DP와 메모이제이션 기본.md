@@ -90,7 +90,7 @@ make_1(x) = min(make_1(x//3), make_1(x//2), make_1(x-1)) + 1
 
 이 식만 이해하면 된다!!
 
-![image-20210604212052128](\img\3.png)
+![image-20210604212052128](./img/3.png)
 
 ```python
 import sys
