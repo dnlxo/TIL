@@ -48,3 +48,26 @@ COMMIT;
 SELECT * FROM userTBL;
 SELECT * FROM buyTBL;
 
+SELECT * FROM userTBL WHERE userName = '김경호' OR userName = '은지원';
+SELECT * FROM userTBL WHERE birthYear >= 1970 AND height >= 182;
+SELECT userid, username FROM userTBL WHERE birthYear >= 1970 AND height >= 182;
+SELECT username, height FROM userTBL WHERE height BETWEEN 180 AND 183;
+SELECT username, height FROM userTBL WHERE height <= 183 AND height >= 180;
+SELECT userName, addr FROM userTBL WHERE addr IN ('경남', '전남', '경북') ;
+
+SELECT userName, height FROM userTBL WHERE userName LIKE '김%';
+SELECT userName, height FROM userTBL WHERE userName LIKE '_종신';
+SELECT userName, height FROM userTBL WHERE userName LIKE '_종_';
+
+
+SELECT userName, height FROM userTBL
+	WHERE height > (SELECT height FROM userTBL WHERE userName = '김경호');
+
+SELECT rownum, userName, height FROM userTBL
+	WHERE height >= ANY (SELECT height FROM userTBL WHERE addr = '경남');
+    
+SELECT rownum, userName, height FROM userTBL
+	WHERE height >= ALL (SELECT height FROM userTBL WHERE addr = '경남');
+    
+SELECT userName, height FROM userTBL
+	WHERE height IN (SELECT height FROM userTBL WHERE addr = '경남');
