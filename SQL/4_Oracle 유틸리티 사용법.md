@@ -76,6 +76,9 @@ START 경로 및 파일명.확장자 (@)
 
 SPOOL 경로 및 파일명
 -- sql*plus 화면 전체를 캡처해서 .lst 파일로 저장한다.
+
+SET LINESIZE 숫자
+SHOW LINESIZE
 ```
 
 ---
