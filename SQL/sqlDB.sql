@@ -71,3 +71,27 @@ SELECT rownum, userName, height FROM userTBL
     
 SELECT userName, height FROM userTBL
 	WHERE height IN (SELECT height FROM userTBL WHERE addr = '경남');
+
+SELECT * FROM buyTBL;
+SELECT userID, SUM(amount) FROM buyTBL GROUP BY userID ORDER BY userID;
+SELECT userID AS 아이디, SUM(amount) AS 총수량 FROM buyTBL GROUP BY userID;
+SELECT userID AS 아이디, SUM(price*amount) AS 총구매가격 FROM buyTBL GROUP BY userID;
+    
+SELECT userName, height FROM userTBL 
+    WHERE height = (SELECT MAX(height) FROM userTBL) 
+        OR height = (SELECT MIN(height) FROM userTBL)
+    ORDER BY height DESC;
+    
+SELECT COUNT(*) FROM userTBL;
+SELECT * FROM userTBL;
+
+SELECT userID AS 아이디, SUM(price*amount) AS 총구매가격 FROM buyTBL GROUP BY userID
+HAVING SUM(price*amount) >= 1000;
+    
+SELECT idNum, groupName, SUM(price*amount) AS "비용"
+	FROM buyTBL
+	GROUP BY ROLLUP (groupName, idNum);    
+
+SELECT groupName, SUM(price*amount) AS 비용, GROUPING_ID(groupName) AS 추가행인가
+	FROM buyTBL
+	GROUP BY ROLLUP(groupName);
