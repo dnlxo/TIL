@@ -95,3 +95,74 @@ SELECT idNum, groupName, SUM(price*amount) AS "비용"
 SELECT groupName, SUM(price*amount) AS 비용, GROUPING_ID(groupName) AS 추가행인가
 	FROM buyTBL
 	GROUP BY ROLLUP(groupName);
+    
+CREATE TABLE cubeTBL(prodName NCHAR(3), color NCHAR(2), amount INT);
+INSERT INTO cubeTBL VALUES('컴퓨터', '검정', 11);
+INSERT INTO cubeTBL VALUES('컴퓨터', '파랑', 22);
+INSERT INTO cubeTBL VALUES('모니터', '검정', 33);
+INSERT INTO cubeTBL VALUES('모니터', '검정', 44);
+SELECT prodName, color, SUM(amount) AS "수량합계"
+    FROM cubeTBL
+    GROUP BY CUBE (color, prodName)
+    ORDER BY prodName, color;
+    WITH abc(userID, total)
+AS
+( SELECT userID, SUM(price*amount)
+	FROM buyTBL GROUP BY userID)
+SELECT * FROM abc ORDER BY total DESC;
+
+CREATE TABLE EMPTBL ( EMP NCHAR(3), MANAGER NCHAR(3), DEPARTMENT NCHAR(3));
+INSERT INTO EMPTBL VALUES('나사장', '없음', '없음');
+INSERT INTO EMPTBL VALUES('김재무', '나사장', '재무부');
+INSERT INTO EMPTBL VALUES('김부장', '김재무', '내무부');
+INSERT INTO EMPTBL VALUES('이부장', '김재무', '재무부');
+INSERT INTO EMPTBL VALUES('우대리', '이부장', '재무부');
+INSERT INTO EMPTBL VALUES('지사원', '이부장', '재무부');
+INSERT INTO EMPTBL VALUES('이영업', '나사장', '영업부');
+INSERT INTO EMPTBL VALUES('한과장', '이영업', '영업부');
+INSERT INTO EMPTBL VALUES('최정보', '나사장', '정보부');
+INSERT INTO EMPTBL VALUES('윤차장', '최정보', '정보부');
+INSERT INTO EMPTBL VALUES('이주임', '윤차장', '정보부');
+
+WITH empCTE(empName, mgrName, dept, empLevel)
+AS
+( 
+	(SELECT emp, manager, department, 0
+		FROM empTBL
+		WHERE manager = '없음')
+	UNION ALL
+	(SELECT empTBL.emp, empTBL.manager, empTBL.department, empCTE.empLevel + 1
+    	FROM empTBL INNER JOIN empCTE
+    		ON empTBL.manager = empCTE.empName)
+)
+SELECT * FROM empCTE ORDER BY dept, empLevel;
+
+SELECT * FROM BUYTBL;
+
+UPDATE buyTBL SET PRICE = PRICE * 1.5 ;
+
+CREATE TABLE memberTBL AS
+(SELECT userID, userName, addr FROM userTBL);
+
+SELECT * FROM memberTBL;
+CREATE TABLE changeTBL
+( userID CHAR(8),
+userName NVARCHAR2(10),
+addr NCHAR(2),
+changeType NCHAR(4)
+);
+
+INSERT INTO changeTBL VALUES('TKV', '태권브이', '한국', '신규가입');
+INSERT INTO changeTBL VALUES('LSG', null, '제주', '주소변경');
+INSERT INTO changeTBL VALUES('LJB', null, '영국', '주소변경');
+INSERT INTO changeTBL VALUES('BBK', null, '탈퇴', '회원탈퇴');
+INSERT INTO changeTBL VALUES('SSK', null, '탈퇴', '회원탈퇴');
+
+MERGE INTO memberTBL M --M 테이블을 변경
+	USING (SELECT changeType, userID, userName, addr FROM changeTBL) C -- C 테이블을 참고해서
+	ON (M.userID = C.userID) -- 두 테이블을 userID를 기준으로 비교
+	WHEN MATCHED THEN
+		UPDATE SET M.addr = C.addr -- 동일한 이름이 있으면 주소 변경
+		DELETE WHERE C.changeType = '회원탈퇴' -- 근데 회원탈퇴였으면 지우셈
+	WHEN NOT MATCHED THEN -- 이름 없으면 추가
+		INSERT (userID, userName, addr) VALUES(C.userID, C.userName, C.addr);
