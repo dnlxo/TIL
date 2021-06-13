@@ -75,5 +75,46 @@ SELECT groupName, SUM(price*amount) AS 비용, GROUPING_ID(groupName) AS 추가�
 	
 -- 데이터인지, 세느라 추가된 열인지 구분하는 법
 -- GROUPING_ID() 가 0이면 데이터고, 1이면 추가된 것이다.
+
+-- CUBE()
+SELECT prodName, color, SUM(amount) AS "수량합계"
+    FROM cubeTBL
+    GROUP BY CUBE (color, prodName)
+    ORDER BY prodName, color;
 ```
+
+---
+
+## WITH와 CTE
+
+```SQL
+-- 비재귀적 CTE
+WITH abc(userID, total)
+AS
+( SELECT userID, SUM(price*amount)
+	FROM buyTBL GROUP BY userID)
+SELECT * FROM abc ORDER BY total DESC;
+
+-- AS () 안에서 출력되는 결과물을 테이블로 생각하고 처리!
+-- 따라서 VIEW 와 용도가 비슷하지만 CTE는 구문이 끝나면 소멸된다.
+-- AS 안에 여러 테이블을 만들수도 있다.
+```
+
+```SQL
+-- 재귀적 CTE
+WITH empCTE(empName, mgrName, dept, empLevel)
+AS
+( 
+	(SELECT emp, manager, department, 0
+		FROM empTBL
+		WHERE manager = '없음')
+	UNION ALL
+	(SELECT empTBL.emp, empTBL.manager, empTBL.department, empCTE.empLevel + 1
+    	FROM empTBL INNER JOIN empCTE
+    		ON empTBL.manager = empCTE.empName)
+)
+SELECT * FROM empCTE ORDER BY dept, empLevel;
+```
+
+- 나중에 더 추가해주세요 222p
 
