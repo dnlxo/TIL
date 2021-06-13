@@ -63,3 +63,56 @@ UPDATE buyTBL SET PRICE = PRICE * 1.5 ;
 ---
 
 ## DELETE
+
+```sql
+DELETE FROM testTBL4 WHERE FirstName = 'peter';
+-- WHERE 생략시 테이블 전체 삭제
+
+ROLLBACK; -- 지운거 되돌리기
+
+DELETE FROM testTBL4 WHERE FirstName = 'peter' AND ROWNUM <= 2;
+-- peter 중에서 상위 2개만 삭제
+
+DELETE, DROP, TRUNCATE 로 테이블 삭제
+-- DML문인 DELETE는 트랜잭션 로그를 기록해야해서 (되돌릴 수 있음) 느리다
+-- DDL문인 DROP은 바로 삭제 (테이블 자체를 없애버림) (롤백 불가) (빠름)
+-- TRUNCATE는 롤백 불가이면서 (빠름) DELETE와 같은 기능. 곧 테이블 자체는 남겨두고 데이터만 지움
+```
+
+---
+
+## MERGE
+
+중요한 멤버 테이블에 정보를 INSERT, UPDATE, DELETE 할 시 직접적으로 바로 적용하지 않고, 다른 테이블에 INSERT 해놓고 나중에 적용시킨다.
+
+```SQL
+CREATE TABLE memberTBL AS
+(SELECT userID, userName, addr FROM userTBL);
+
+SELECT * FROM memberTBL;
+
+CREATE TABLE changeTBL
+( userID CHAR(8),
+userName NVARCHAR2(10),
+addr NCHAR(2),
+changeType NCHAR(4)
+);
+
+INSERT INTO changeTBL VALUES('TKV', '태권브이', '한국', '신규가입');
+INSERT INTO changeTBL VALUES('LSG', null, '제주', '주소변경');
+INSERT INTO changeTBL VALUES('LJB', null, '영국', '주소변경');
+INSERT INTO changeTBL VALUES('BBK', null, '탈퇴', '회원탈퇴');
+INSERT INTO changeTBL VALUES('SSK', null, '탈퇴', '회원탈퇴');
+
+-- MERGE 실행
+
+MERGE INTO memberTBL M --M 테이블을 변경
+	USING (SELECT changeType, userID, userName, addr FROM changeTBL) C -- C 테이블을 참고해서
+	ON (M.userID = C.userID) -- 두 테이블을 userID를 기준으로 비교
+	WHEN MATCHED THEN
+		UPDATE SET M.addr = C.addr -- 동일한 이름이 있으면 주소 변경
+		DELETE WHERE C.changeType = '회원탈퇴' -- 근데 회원탈퇴였으면 지우셈
+	WHEN NOT MATCHED THEN -- 이름 없으면 추가
+		INSERT (userID, userName, addr) VALUES(C.userID, C.userName, C.addr);
+```
+
