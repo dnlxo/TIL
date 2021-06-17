@@ -1,9 +1,11 @@
 package hello.hellospring.repository;
 
 import hello.hellospring.domain.Member;
+import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
+//@Repository
 //동작하는지 확인하고 싶다. 테스트 케이스를 작성하면 댄다.
 public class MemoryMemberRepository implements MemberRepository {
 
