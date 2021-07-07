@@ -78,5 +78,3 @@
 
    - null 의 경우 비교연산자 안먹으니까 is null, is not null 로 하세요
 
-9. 
-

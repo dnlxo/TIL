@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Insert title here</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  <script type="text/javascript" src="../js/my.js"></script>
+
+</head>
+<body>
+<article class="container">
+  <div class="page-header">
+    <div class="col-md-6 col-md-offset-3">
+      <h3>회원가입</h3>
+    </div>
+  </div>
+  <div class="col-sm-6 col-md-offset-3">
+    <form role="form">
+      <div class="form-group">
+        <label for="inputName">이름</label>
+        <input type="text" class="form-control" id="name" placeholder="이름을 입력해 주세요">
+      </div>
+      <div class="form-group">
+        <label for="InputEmail">ID</label>
+        <input type="text" class="form-control" id="id" placeholder="ID를 입력해주세요">
+      </div>
+      <div class="form-group">
+        <label for="inputPassword">비밀번호</label>
+        <input type="password" class="form-control" id="pw" placeholder="비밀번호를 입력해주세요">
+      </div>
+      <div class="form-group">
+        <label for="inputPasswordCheck">비밀번호 확인</label>
+        <input type="password" class="form-control" id="inputPasswordCheck" placeholder="비밀번호 확인을 위해 다시한번 입력 해 주세요">
+      </div>
+      <div class="form-group">
+        <label for="inputMobile">휴대폰 번호</label>
+        <input type="tel" class="form-control" id="inputMobile" placeholder="휴대폰번호를 입력해 주세요">
+      </div>
+
+      <div class="form-group text-center">
+        <input type="button" id="memberInsertBtn" class="btn btn-primary"
+               value="회원가입">
+        <button type="submit" class="btn btn-warning">
+          가입취소<i class="fa fa-times spaceLeft"></i>
+        </button>
+      </div>
+    </form>
+  </div>
+
+</article>
+
+
+</body>
+</html>
