@@ -57,4 +57,3 @@ for i in range(N) :
     
 print(block)
 print(*sorted(answers))
-    
