@@ -84,7 +84,7 @@
     // 숫자형 오름차순 정렬하기
      
     sort(function(a, b)) { 
-    		return a - b; 
+    	return a - b; 
     }
     
     // compareFunction(a, b)이 0보다 작은 경우 a를 b보다 낮은 색인으로 정렬합니다. 즉, a가 먼저옵니다.
