@@ -42,10 +42,10 @@
 
 ### LRU 캐시를 직접 구현해보자 O(1)
 
+- https://leetcode.com/problems/lru-cache/
 - Least Recently Used
 - 가장 오랫동안 참조되지 않은 것을 교체하는 기법
 - O(1) 로 구현은 그렇게 간단하지 않다.
-
 - 구현 방법
   - 새로운 데이터가 들어온 경우
     - 캐시에 넣어준다.
