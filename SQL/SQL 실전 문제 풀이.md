@@ -32,7 +32,7 @@
      
      TO_CHAR(날짜열이름, '형식')
      하면 되고, 24시간 표시하고싶으면 hh24 쓰면 됨
-     hh24:mi:ss
+     yyyy-mm-dd hh24:mi:ss
      
      -- 예제
      select 
@@ -77,4 +77,55 @@
      ```
 
    - null 의 경우 비교연산자 안먹으니까 is null, is not null 로 하세요
+
+9. where like 절
+
+   - ```sql
+     select animal_id, animal_type, name from 테이블 
+     where 
+     sex_upon_intake like 'Intact%' and (sex_upon_outcome like 'Spayed%' or sex_upon_outcome like 'Neutered%') order by animal_id
+     ```
+
+   - ```sql
+     -- 위랑 같은 여러개 like
+     where
+     sex_upon_intake like 'Intact%' and regexp_like(sex_upon_outcome, 'Spayed|Neutered') order by animal_id
+     ```
+
+10. String, Date 처리
+
+    - where ~~ in (~~)
+
+    ```sql
+    select animal_id, name, sex_upon_intake from animal_ins
+    where name in ('Lucy', 'Ella', 'Pickle', 'Rogan', 'Sabrina', 'Mitty') order by animal_id
+    ```
+
+    - 대소문자 구분해야할 때?
+
+    ```sql
+    select animal_id, name from animal_ins where animal_type = 'Dog' and regexp_like(name, 'el|EL|eL|El') order by name
+    
+    -- 위처럼 하기 보다는? 테이블을 모두 대문자로 바꾸거나 소문자로 바꾼뒤
+    
+    select animal_id, name from animal_ins where animal_type = 'Dog' and UPPER(name) like '%EL%' order by name
+    ```
+
+    - 조건에 따라 조회할 때 열추가 할때
+
+    ```sql
+    -- 코드를 입력하세요
+    SELECT animal_id, name,
+    case when SEX_UPON_INTAKE like '%Intact%' then 'X' else 'O' end 중성화
+    from animal_ins order by animal_id
+    ```
+
+    - 각 행의 데이터를 기반으로 열 추가
+
+    ```sql
+    select animal_id, name, outtime - intime as 시간 from 테이블
+    -- 데이터 as 컬럼명
+    ```
+
+    
 
