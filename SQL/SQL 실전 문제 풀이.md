@@ -15,7 +15,7 @@
 
    - distinct 셀렉트 뒤에 붙이면 됨
 
-4. order by 뒤에는 having 을 where 대신 쓰면 됨
+4. group by 뒤에는 having 을 where 대신 쓰면 됨
 
    - ```sql
      select name, count(name) from animal_ins group by name having name != 'null' and count(name) >= 2 order by name
