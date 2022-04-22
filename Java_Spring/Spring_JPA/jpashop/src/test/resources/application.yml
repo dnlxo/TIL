@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/jpashop #jdbc:h2:mem:testdb # 자동으로 여기로 .. 메모리디비.. 그니까 진짜 디비 ㄴㄴ 테스트니까어자피
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create # 이 옵션은 애플리케이션 실행 시점에 테이블을 drop 하고, 다시 생성한다.
+    properties:
+      hibernate:
+#       show_sql: true  sysout으로 찍음
+        format_sql: true
+
+logging.level:
+  org.hibernate.SQL: debug # 옵션은 logger를 통해 하이버네이트 실행 SQL을 남긴다.
+  org.hibernate.type: trace # 쿼리 파라미터 찍는법인데 이걸로약간부족하다;; 외부라이브러리 이용가능
