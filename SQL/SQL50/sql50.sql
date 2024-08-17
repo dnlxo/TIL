@@ -22,3 +22,19 @@ and a1.machine_id = a2.machine_id
 and a1.timestamp < a2.timestamp
 GROUP BY machine_id
 ;
+
+-- 성능은 비슷하네..
+
+SELECT user_id, ROUND(COUNT(CASE WHEN action ='confirmed' THEN 1 END) / COUNT(*), 2) confirmation_rate
+FROM Signups s
+LEFT JOIN Confirmations c
+USING (user_id)
+GROUP BY 1
+;
+
+SELECT user_id, ROUND(AVG(IF(action ='confirmed', 1, 0)), 2) confirmation_rate
+FROM Signups s
+LEFT JOIN Confirmations c
+USING (user_id)
+GROUP BY 1
+;
