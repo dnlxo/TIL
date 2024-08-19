@@ -59,5 +59,36 @@ FROM activity
 WHERE (player_id,DATE_SUB(event_date, INTERVAL 1 DAY)) IN (SELECT player_id,min(event_date) FROM Activity GROUP BY player_id)
 ;
 
+
+-- COUNT(*), COUNT(0), COUNT(컬럼명)의 성능 차이에 대해 설명드리겠습니다:
+
+-- COUNT(*):
+
+-- 모든 행을 카운트합니다 (NULL 포함).
+-- 일반적으로 가장 빠른 성능을 보입니다.
+-- 옵티마이저가 가장 효율적인 방법으로 처리합니다.
+
+
+-- COUNT(0):
+
+-- COUNT(*)와 동일한 결과를 반환합니다.
+-- 대부분의 데이터베이스 시스템에서 COUNT(*)와 성능이 동일합니다.
+-- 일부 오래된 MySQL 버전에서는 약간의 성능 차이가 있을 수 있지만, 최신 버전에서는 무시할 만한 수준입니다.
+
+
+-- COUNT(컬럼명):
+
+-- 지정된 컬럼의 NULL이 아닌 값만 카운트합니다.
+-- NULL 체크가 필요하므로 COUNT(*)보다 일반적으로 느립니다.
+-- 인덱스된 컬럼을 사용할 경우, 성능이 향상될 수 있습니다.
+
+
+
+-- 성능 비교:
+
+-- 일반적으로: COUNT(*) ≈ COUNT(0) > COUNT(컬럼명)
+-- 대부분의 경우 COUNT(*)과 COUNT(0)의 성능 차이는 무시할 만한 수준입니다.
+-- COUNT(컬럼명)은 NULL 체크로 인해 추가적인 작업이 필요하므로 상대적으로 느릴 수 있습니다.
+
 --
 
