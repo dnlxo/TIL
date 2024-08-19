@@ -38,3 +38,26 @@ LEFT JOIN Confirmations c
 USING (user_id)
 GROUP BY 1
 ;
+
+--
+-- 결론적으로, IFNULL과 COALESCE의 성능 차이는 대부분의 상황에서 무시할 만한 수준입니다. 
+-- 따라서 성능보다는 가독성, 유지보수성, 그리고 특정 상황에 더 적합한 함수를 선택하는 것이 중요합니다.
+
+-- WHERE 절에 2개 컬럼 넣기.. 를 잘 써볼까
+
+# Write your MySQL query statement below
+SELECT ROUND(COUNT(DISTINCT b.player_id) / COUNT(DISTINCT a.player_id), 2) AS fraction
+FROM (SELECT *, ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY event_date) rn FROM Activity) a
+LEFT JOIN Activity b 
+ON a.player_id = b.player_id AND a.event_date = DATE_SUB(b.event_date, INTERVAL 1 DAY) AND rn = 1
+;
+
+# Write your MySQL query statement below
+SELECT
+    ROUND(COUNT(*)/(SELECT COUNT(DISTINCT player_id) FROM Activity),2) AS fraction
+FROM activity 
+WHERE (player_id,DATE_SUB(event_date, INTERVAL 1 DAY)) IN (SELECT player_id,min(event_date) FROM Activity GROUP BY player_id)
+;
+
+--
+
