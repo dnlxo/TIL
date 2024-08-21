@@ -103,4 +103,26 @@ ON e.reports_to = m.employee_id
 GROUP BY 1, 2
 ORDER BY 1
 
+-- 둘 중 뭐가더 좋을까
+
+-- -- -- # Write your MySQL query statement below
+
+SELECT person_name FROM Queue WHERE turn = (
+    SELECT MAX(turn) FROM (
+        SELECT turn, SUM(weight) OVER (ORDER BY turn) AS sum
+        FROM Queue
+    ) a WHERE sum <= 1000
+)
+
+SELECT person_name 
+FROM (
+    SELECT person_name, turn, SUM(weight) OVER (ORDER BY turn) AS sum
+    FROM Queue
+) a 
+WHERE sum <= 1000
+ORDER BY turn DESC
+LIMIT 1
+
+-- 일반적으론 밑에께 좋대
+
 
