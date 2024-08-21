@@ -90,5 +90,17 @@ WHERE (player_id,DATE_SUB(event_date, INTERVAL 1 DAY)) IN (SELECT player_id,min(
 -- 대부분의 경우 COUNT(*)과 COUNT(0)의 성능 차이는 무시할 만한 수준입니다.
 -- COUNT(컬럼명)은 NULL 체크로 인해 추가적인 작업이 필요하므로 상대적으로 느릴 수 있습니다.
 
+-- 
 --
+-- 역시나 셀프 조인을 잘쓰자
+
+# Write your MySQL query statement below
+
+SELECT m.employee_id, m.name, COUNT(e.employee_id) AS reports_count, ROUND(AVG(e.age)) AS average_age
+FROM Employees e
+INNER JOIN Employees m
+ON e.reports_to = m.employee_id
+GROUP BY 1, 2
+ORDER BY 1
+
 
