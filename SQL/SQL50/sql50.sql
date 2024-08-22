@@ -151,3 +151,37 @@ SELECT IF (id < (SELECT MAX(id) FROM Seat),
 FROM Seat
 ORDER BY id;
 -- 흠...
+
+-- OVER 에서 윈도우 사용법!!
+
+-- # Write your MySQL query statement below
+
+SELECT DISTINCT
+    visited_on, 
+    (SELECT SUM(amount) AS amt FROM Customer c2 WHERE c2.visited_on BETWEEN DATE_SUB(c1.visited_on, INTERVAL 6 DAY) AND c1.visited_on) AS amount,
+    ROUND((SELECT SUM(amount) AS amt FROM Customer c2 WHERE c2.visited_on BETWEEN DATE_SUB(c1.visited_on, INTERVAL 6 DAY) AND c1.visited_on) / 7, 2)average_amount
+FROM Customer c1
+WHERE visited_on >= (SELECT DATE_ADD(MIN(visited_on), INTERVAL 6 DAY) FROM Customer)
+ORDER BY visited_on
+-- 원래 이걸로 했었는데,,
+
+SELECT DISTINCT
+    visited_on, 
+    SUM(amount) OVER w AS amount,
+    ROUND(SUM(amount) OVER w / 7, 2) AS average_amount
+FROM 
+    Customer
+WINDOW w AS (
+    ORDER BY visited_on 
+    RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW
+)
+ORDER BY 
+    visited_on
+LIMIT 1000 OFFSET 6
+-- 이렇게 할 수도 있당. 이동 평균 구할 때 쓰는 것인듯. ROW BETWEEN 과 RANGE BETWEEN 잘 사용!
+-- 중복값이 있을 때,, 범위인지 행갯수인지.
+
+-- 차이점 요약:
+-- **ROWS**는 물리적 행을 기준으로 하므로, 단순히 행의 개수를 기준으로 범위를 설정합니다.
+-- **RANGE**는 값의 범위를 기준으로 하므로, 동일한 값이나 범위에 있는 모든 행을 포함할 수 있습니다.
+-- ROWS는 일반적으로 물리적 행의 개수를 다룰 때 사용되고, RANGE는 날짜나 숫자 범위와 같은 논리적 범위를 다룰 때 사용됩니다.
