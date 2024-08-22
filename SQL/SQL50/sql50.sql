@@ -125,4 +125,29 @@ LIMIT 1
 
 -- 일반적으론 밑에께 좋대
 
+-- 시퀀스 스왑
 
+# Write your MySQL query statement below
+SELECT RANK() OVER (ORDER BY id + POW(-1, id + 1)) AS id, student
+FROM Seat
+ORDER BY 1
+
+-- 내꺼가 더 좋은데 나는 간단하고..
+# Write your MySQL query statement below
+select
+    case
+        when id%2=1 and id+1 in (select id from Seat) then id+1 
+        when id%2=0 then id-1
+        else id
+        end as id
+    , student
+from Seat 
+order by id
+-- 이런식으로 거의 한듯 사람들은..
+SELECT IF (id < (SELECT MAX(id) FROM Seat), 
+            IF(id % 2 = 0, id - 1, id + 1), 
+            IF(id % 2 = 0, id - 1, id)
+        ) AS id, student
+FROM Seat
+ORDER BY id;
+-- 흠...
