@@ -185,3 +185,14 @@ LIMIT 1000 OFFSET 6
 -- **ROWS**는 물리적 행을 기준으로 하므로, 단순히 행의 개수를 기준으로 범위를 설정합니다.
 -- **RANGE**는 값의 범위를 기준으로 하므로, 동일한 값이나 범위에 있는 모든 행을 포함할 수 있습니다.
 -- ROWS는 일반적으로 물리적 행의 개수를 다룰 때 사용되고, RANGE는 날짜나 숫자 범위와 같은 논리적 범위를 다룰 때 사용됩니다.
+
+
+-- 이게 필요했음. GROUP BY COUNT 를 통해서 1개만 존재하는 행들만 가져올 수 있군.
+# Write your MySQL query statement below
+
+SELECT 
+    lat, lon, ROUND(SUM(tiv_2016), 2) AS tiv_2016, COUNT(*)
+FROM 
+    Insurance
+GROUP BY 
+    lat, lon
