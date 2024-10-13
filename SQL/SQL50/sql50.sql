@@ -223,3 +223,17 @@ FROM Activities
 GROUP BY sell_date
 ORDER BY sell_date
 
+-- 정규표현식 @@@ 중요
+
+-- mail REGEXP '^[A-Za-z]': 
+-- LIKE 대신 REGEXP를 사용하여 이메일의 첫 문자가 알파벳인지 확인합니다. 
+-- ^[A-Za-z]는 문자열의 시작(^)에서 알파벳 문자를 찾는 정규식입니다.
+
+-- NOT REGEXP '[^A-Za-z0-9._-]': 
+-- 정규식을 사용하여 남은 이메일 부분에 허용되지 않은 문자가 있는지 검사합니다.
+
+SELECT * FROM Users
+WHERE 1=1
+  AND mail LIKE '%@leetcode.com'
+  AND mail REGEXP '^[A-Za-z]'
+  AND REPLACE(mail, '@leetcode.com', '') NOT REGEXP '[^A-Za-z0-9._-]'
