@@ -196,3 +196,30 @@ FROM
     Insurance
 GROUP BY 
     lat, lon
+
+
+-- 두번쨰로 높은 봉급... 없으면 null 출력 << MAX() 함수 등을 이용
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM (
+    SELECT salary, DENSE_RANK() OVER(ORDER BY salary DESC) rnk
+    FROM Employee
+) s
+WHERE rnk = 2
+
+-- 혹은
+
+SELECT MAX(salary) AS SecondHighestSalary
+FROM Employee 
+WHERE Salary <> (SELECT MAX(salary) FROM Employee)
+
+-- GROUP_CONCAT 이라는게 있군요
+
+SELECT 
+    sell_date, 
+    COUNT(DISTINCT product) AS num_sold,
+    GROUP_CONCAT(DISTINCT product) AS products
+FROM Activities
+GROUP BY sell_date
+ORDER BY sell_date
+
